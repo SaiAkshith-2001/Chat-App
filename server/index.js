@@ -1,16 +1,18 @@
-const express = require("express");
+import express from "express";
+import cors from "cors";
+import http from "http";
+import dotenv from "dotenv";
+import { Server } from "socket.io";
 const app = express();
-const http = require("http");
-const cors = require("cors");
-const { Server } = require("socket.io");
-app.use(cors());
-
+dotenv.config();
 const server = http.createServer(app);
-
+const PORT = process.env.PORT || 8000;
+app.use(express.json());
+app.use(cors());
 const io = new Server(server, {
   cors: {
     origin: "*",
-    methods: ["GET", "POST"],
+    methods: ["GET", "POST", "PUT"],
   },
 });
 
@@ -29,6 +31,6 @@ io.on("connection", (socket) => {
   });
 });
 
-server.listen(5000, () => {
-  console.log("server is listening and socket is active!");
+server.listen(PORT, () => {
+  console.log(`server is running ${PORT}`);
 });
